@@ -2,7 +2,7 @@
 //TODO Структуру реализовать на массиве
 //TODO Посчитать значение выражения
 
-#include "Stack.h"
+#include "stack.c++"
 
 #include <iostream>
 #include <locale>
@@ -15,7 +15,7 @@ void printMenu(string& expression);
 
 int calculateExpression(string& expression);
 
-void main()
+int main()
 {
 	setlocale(LC_ALL, "ru");
 
@@ -37,18 +37,26 @@ void main()
 		switch (userMenuChoice)
 		{
 		case 1:
-
+			cout << "Введите арифметическое выражение в постфиксной нотации: ";
+			cin >> expression;
 			system("pause");
 			break;
 
 		case 2:
-
+			cout << "Значение ввёденного выражения равно: ";
+			cout << calculateExpression(expression);
+			cout << endl;
 			system("pause");
 			break;
 
 		case 0:
 			cout << "До свидания!\n";
 			userMenuChoice = 0;
+			system("pause");
+			break;
+
+		case 2022:
+			cout << "Пасхалочка :D\n";
 			system("pause");
 			break;
 
@@ -59,6 +67,8 @@ void main()
 			break;
 		}
 	}
+
+	return 0;
 }
 
 
@@ -68,7 +78,7 @@ void printMenu(string& expression)
 		"Задание 2 - Обработка выражений в разных нотациях.\n"
 		"~~~~~~~~~~~~~~~~~Меню~~~~~~~~~~~~~~~\n"
 		"Введённое выражение: ";
-	cout << expression;
+	cout << expression << '\n';
 	cout << "Введите [1], чтобы ввести выражение в постфиксной нотации как строку.\n"
 		"Введите [2], чтобы получить значение введённого выражения.\n"
 		"Введите [0], чтобы закончить работу программы.\n";
@@ -76,47 +86,42 @@ void printMenu(string& expression)
 }
 
 
-
-template<typename T>
-T calculateExpression(string& expression)
+int calculateExpression(string& expression)
 {
-
 	Stack <int> operands;
 	for (size_t i = 0; i < expression.length(); i++)
 	{
 		if (expression[i] != '+' &&
 			expression[i] != '-' &&
 			expression[i] != '*' &&
-			expression[i] != '/'&&)
+			expression[i] != '/')
 		{
-			operands.push(stoi(expression[i]);
+			operands.push(int(expression[i]) - 48);
 		}
 		else
 		{
 			int tempResult;
 			char op = expression[i];
+			int popedFirst = operands.pop();
+			int popedLast = operands.pop();
 			switch (op)
 			{ 
 			case '+':
-				tempResult = operands.pop() + operands.pop();
+				tempResult = popedLast + popedFirst;
 				break;
-			case '+':
-				tempResult = operands.pop() + operands.pop();
+			case '-':
+				tempResult = popedLast - popedFirst;
 				break;
 			case '/':
-				tempResult = operands.pop() + operands.pop();
+				tempResult = popedLast / popedFirst;
 				break;
 			case '*':
-				tempResult = operands.pop() + operands.pop();
+				tempResult = popedLast * popedFirst;
 				break;
 			}
-		
-
-			 
+			operands.push(tempResult);		 
 		}
 	}
-
-
-
-	return T();
+	return operands.pop();
+	operands.clear();
 }
